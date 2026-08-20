@@ -1,0 +1,45 @@
+name: Daily 3:08 PM Market Profile Cloud Sync
+
+on:
+  schedule:
+    # 09:38 UTC is 15:08 IST (3:08 PM IST), Monday to Friday
+    - cron: '38 9 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync_market_profile:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt tabulate
+
+      - name: Run Zero-Token Cloud MP Harvest & AI Synthesis
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python cloud_mp_sync.py
+
+      - name: Commit and Push Updated Ledger
+        run: |
+          git config --global user.name "DeskworksCloudBot"
+          git config --global user.email "bot@deskworks.cloud"
+          git add market_profile_history.csv README.md
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update Market Profile ledger for $(date +'%Y-%m-%d')" && git push)
