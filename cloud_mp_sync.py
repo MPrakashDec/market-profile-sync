@@ -62,7 +62,7 @@ def run_cloud_sync():
     else:
         vwap = mid
         
-    vol_lakhs = round(cum_vol / 100000.0, 0)
+    vol_lakhs = round(cum_vol / 100000.0, 2)
     
     # TPO Value Area & POC
     price_bins = []
