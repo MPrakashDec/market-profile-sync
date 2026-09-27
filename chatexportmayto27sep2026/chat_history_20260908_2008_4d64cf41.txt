@@ -1,0 +1,104 @@
+================================================================================
+CHAT TRANSCRIPT EXPORT
+Conversation ID: 4d64cf41-27ad-46ca-ad44-0c0e75c09bac
+Short ID: 4d64cf41
+Start Time (UTC): 2026-09-08T14:38:06Z
+Start Time (IST): 2026-09-08 20:08:06 IST
+End Time (UTC):   2026-09-08T14:40:04Z
+End Time (IST):   2026-09-08 20:10:04 IST
+Total Dialogue Turns: 2 (User: 1, Assistant: 1)
+Source File: C:\Users\M Prakash\.gemini\antigravity\brain\4d64cf41-27ad-46ca-ad44-0c0e75c09bac\.system_generated\logs\transcript.jsonl
+Filter Policy: Human-readable dialogue only (Tool invocations, raw JSON payloads stripped)
+================================================================================
+
+--------------------------------------------------------------------------------
+[USER] - 2026-09-08T14:38:06Z (2026-09-08 20:08:06 IST)
+--------------------------------------------------------------------------------
+Execute a non-destructive broker authentication verification probe for Fyers and Upstox using the Python interpreter 'e:\A New folder\Des\deskworks\.venv\Scripts\python.exe' from cwd 'e:\A New folder\Des\deskworks'.
+Check token files in 'fuel_db', test if Fyers profile/quotes and Upstox profile/quotes are valid.
+Print exact raw output, exit code, and verify tokens for pre-market on 2026-09-09. Do not modify files.
+
+--------------------------------------------------------------------------------
+[AI CO-PILOT] - 2026-09-08T14:40:04Z (2026-09-08 20:10:04 IST)
+--------------------------------------------------------------------------------
+### BROKER AUTHENTICATION & MARKET DATA PROBE REPORT
+
+**Line 1 Failure Alert:** Upstox API authentication `FAILED` (HTTP 401: `UDAPI100050 Invalid token`); both Fyers and Upstox tokens `FAILED` for pre-market on 2026-09-09 due to scheduled early-morning expiry (06:00:00 IST and 03:30:00 IST).
+
+---
+
+### Binary Status Summary
+
+| Broker Feed | Current State (2026-09-08 20:09 IST) | Pre-Market State (2026-09-09 09:00 IST) | Details |
+|---|---|---|---|
+| **Fyers** | `RUNNING` (HTTP 200) | `FAILED` | Profile & quotes verified active now; expires tomorrow at 06:00:00 IST |
+| **Upstox** | `FAILED` (HTTP 401) | `FAILED` | Invalidated token (`UDAPI100050`); expires tomorrow at 03:30:00 IST |
+| **Filesystem** | `UNMODIFIED` | `UNMODIFIED` | Read-only inspection; zero files touched |
+
+---
+
+### Exact Command & Exit Code
+
+- **Working Directory:** `E:\A New folder\Des\deskworks`
+- **Interpreter:** `E:\A New folder\Des\deskworks\.venv\Scripts\python.exe`
+- **Exit Code:** `0`
+
+**Executed Command:**
+```powershell
+$code = @'
+import os, sys, json, datetime, base64, requests
+
+sys.stdout.reconfigure(encoding='utf-8')
+
+cwd = os.getcwd()
+fyers_token_path = os.path.join(cwd, 'fuel_db', 'fyers_token.txt')
+upstox_token_path = os.path.join(cwd, 'fuel_db', 'upstox_token.txt')
+
+def decode_jwt_payload(token_str):
+    try:
+        parts = token_str.split('.')
+        if len(parts) >= 2:
+            padded = parts[1] + '=' * ((4 - len(parts[1]) % 4) % 4)
+            data = json.loads(base64.urlsafe_b64decode(padded))
+            exp = data.get('exp')
+            iat = data.get('iat')
+            exp_ist = datetime.datetime.fromtimestamp(exp).strftime('%Y-%m-%d %H:%M:%S') if exp else None
+            iat_ist = datetime.datetime.fromtimestamp(iat).strftime('%Y-%m-%d %H:%M:%S') if iat else None
+            return {
+                'payload': data,
+                'exp_epoch': exp,
+                'exp_ist': exp_ist,
+                'iat_epoch': iat,
+                'iat_ist': iat_ist,
+            }
+    except Exception as e:
+        return {'error'
+<truncated 6875 bytes>
+m
+  Quotes Probe: SUCCESS (HTTP 200)
+    -> NSE:NIFTY50-INDEX | LTP: 23635.1 | Vol: 0 | Chg: -144.05 (-0.61%)
+    -> NSE:NIFTY26SEPFUT | LTP: 23744.1 | Vol: 2175290 | Chg: -123.6 (-0.52%)
+
+[2/2] UPSTOX VERIFICATION
+  Token File: E:\A New folder\Des\deskworks\fuel_db\upstox_token.txt
+  File Size: 311 bytes
+  File Modified: 2026-09-08 08:45:29
+  JWT Issued At (IAT): 2026-09-08 08:45:28 (epoch: 1788837328)
+  JWT Expiry (EXP):    2026-09-09 03:30:00 (epoch: 1788904800)
+  Sub / User: 5PCSBW
+  Profile Probe: FAILED (HTTP 401) | Body: {"status":"error","errors":[{"errorCode":"UDAPI100050","message":"Invalid token used to access API","propertyPath":null,"invalidValue":null,"error_code":"UDAPI100050","property_path":null,"invalid_value":null}]}
+  Quotes Probe: FAILED (HTTP 401) | Body: {"status":"error","errors":[{"errorCode":"UDAPI100050","message":"Invalid token used to access API","propertyPath":null,"invalidValue":null,"error_code":"UDAPI100050","property_path":null,"invalid_value":null}]}
+
+=== PRE-MARKET 2026-09-09 VALIDITY CHECK ===
+Target Pre-Market Timestamp: 2026-09-09 09:00:00
+  Fyers Pre-Market Status:  FAILED (EXPIRED) -> Token Expiry 2026-09-09 06:00:00 < Pre-Market 2026-09-09 09:00:00
+  Upstox Pre-Market Status: FAILED (EXPIRED / INVALIDATED) -> Token Expiry 2026-09-09 03:30:00 < Pre-Market 2026-09-09 09:00:00
+```
+
+---
+
+### Pre-Market 2026-09-09 Assessment
+
+1. **Fyers Session:** Currently valid for post-market queries tonight, but `exp` is locked at `2026-09-09 06:00:00 IST`. It will be dead 3 hours before pre-market opens at 09:00 IST.
+2. **Upstox Session:** Token in `fuel_db/upstox_token.txt` and `.env` has already been invalidated on Upstox's server (`UDAPI100050`), and its hard expiry is `2026-09-09 03:30:00 IST`.
+3. **Operational Invariant:** The 08:45 AM morning bootstrapper ([`morning_bootstrapper_20260908_0845.py`](file:///e:/A%20New%20folder/Des/deskworks/morning_bootstrapper_20260908_0845.py)) must be triggered on 2026-09-09 between 08:00 and 08:45 IST to renew both tokens prior to market pre-open.
