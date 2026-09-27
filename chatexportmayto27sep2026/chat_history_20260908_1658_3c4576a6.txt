@@ -1,0 +1,48 @@
+================================================================================
+CHAT TRANSCRIPT EXPORT
+Conversation ID: 3c4576a6-c6e7-4ff1-abf8-9e5fef6571b3
+Short ID: 3c4576a6
+Start Time (UTC): 2026-09-08T11:28:57Z
+Start Time (IST): 2026-09-08 16:58:57 IST
+End Time (UTC):   2026-09-08T11:33:57Z
+End Time (IST):   2026-09-08 17:03:57 IST
+Total Dialogue Turns: 2 (User: 1, Assistant: 1)
+Source File: C:\Users\M Prakash\.gemini\antigravity\brain\3c4576a6-c6e7-4ff1-abf8-9e5fef6571b3\.system_generated\logs\transcript.jsonl
+Filter Policy: Human-readable dialogue only (Tool invocations, raw JSON payloads stripped)
+================================================================================
+
+--------------------------------------------------------------------------------
+[USER] - 2026-09-08T11:28:57Z (2026-09-08 16:58:57 IST)
+--------------------------------------------------------------------------------
+Execute historical session backfilling for NIFTY Futures and Heavyweights across the last 30 trading sessions.
+
+Parameters:
+- Interpreter: `e:\A New folder\Des\deskworks\.venv\Scripts\python.exe`
+- Fyers Token: `e:\A New folder\Des\deskworks\fuel_db\fyers_token.txt`
+- Client ID: `VC5WEEUZEI-100`
+- Target Symbols: `NSE:NIFTY26SEPFUT`, `NSE:RELIANCE-EQ`, `NSE:HDFCBANK-EQ`, `NSE:ICICIBANK-EQ`
+- Pull daily and 5-minute historical candles from August 1, 2026 to September 8, 2026.
+- Calculate: Daily IB (09:15-10:15 IBH/IBL), Day High/Low, Session FutVWAP, and whether an IBL or IBH breakout occurred.
+- Save summary table to `fuel_db/data/HISTORICAL_30D_IB_BREAKS.parquet`.
+- Report total sessions analyzed, breakout success rate, and stats.
+
+--------------------------------------------------------------------------------
+[AI CO-PILOT] - 2026-09-08T11:33:57Z (2026-09-08 17:03:57 IST)
+--------------------------------------------------------------------------------
+### Historical Session Backfill & IB Breakout Audit Completed
+
+The historical backfilling run has executed and verified against Fyers exchange data. Results and detailed metrics have been computed, serialized to Parquet, and dispatched to the parent agent.
+
+#### Execution Summary
+- **Script Generated:** [`backfill_historical_ib_breaks_20260908_1705.py`](file:///e:/A%20New%20folder/Des/deskworks/backfill_historical_ib_breaks_20260908_1705.py)
+- **Output Parquet:** [`HISTORICAL_30D_IB_BREAKS.parquet`](file:///e:/A%20New%20folder/Des/deskworks/fuel_db/data/HISTORICAL_30D_IB_BREAKS.parquet) (26,745 bytes, 108 rows $\times$ 28 columns)
+- **Sessions Analyzed:** 27 trading sessions between `2026-08-01` and `2026-09-08`
+- **Target Symbols:** `NSE:NIFTY26SEPFUT`, `NSE:RELIANCE-EQ`, `NSE:HDFCBANK-EQ`, `NSE:ICICIBANK-EQ`
+
+#### Core Findings (NIFTY Futures)
+- **Breakout Frequency:** **96.3%** (26 of 27 sessions broke Initial Balance). Only 1 session (`2026-08-21`) was an inside day.
+- **Breakout Bias:** 12 IBL breaks (downside), 7 IBH breaks (upside), 7 two-way outside expansions.
+- **Breakout Acceptance / Success Rate:** **61.5%** (16 of 26 breakouts closed outside the IB).
+- **Failed Auction Rate:** **38.5%** (10 of 26 sessions probed outside the IB but rejected and closed back inside).
+- **Extension Targets:** **65.4%** reached $\ge 0.5\times$ IB range; **30.8%** expanded $\ge 1.0\times$ IB range.
+- **Average Ranges:** Mean IB Range = `74.60 pts` | Mean Session Range = `138.64 pts`.
