@@ -20,7 +20,7 @@ Primary design principle: **information before transport**.
 
 ## 2. Historical workspace rule
 
-Historical workspace: E:\\A New folder\\Des
+Historical workspace: E:\A New folder\Des
 
 Des is a messy historical continuation containing old code, databases, captures, logs, exports, renamed/duplicate/obsolete artifacts.
 
@@ -43,7 +43,39 @@ Desired system:
 
 The AI/LLM is a language/reasoning interface over structured state. It must not become the state-of-truth by inventing observations or silently promoting inference to fact.
 
-## 4. Market Profile / Auction Reasoning direction
+## 4. ChatGPT's role and situational-awareness boundary
+
+ChatGPT is a **reasoning/chat component, not the iDSS agent, project authority, or system of record**.
+
+Current ChatGPT sessions have limited persistent project knowledge and are not continuously attached to:
+- E:\A New folder\Des
+- live processes/databases/market feeds
+- every repository change
+- every Antigravity/local-agent action
+- the complete historical project state
+
+Therefore ChatGPT can reason deeply about supplied/retrieved project state, but must not pretend to have continuous situational awareness of the project.
+
+The desired architecture is the reverse dependency:
+
+**Persistent iDSS state/research/control layer**
+→ current situation, history, evidence, negative knowledge, hypotheses, experiments, code/system state, live state, unresolved questions
+
+then:
+
+**Interchangeable reasoning models**
+→ ChatGPT / Claude / other models provide research, criticism, hypothesis generation, synthesis and review
+
+and:
+
+**Agent/builder layer**
+→ Antigravity/local agent operates Des, code, experiments and implementation
+
+The intelligence should live primarily in the **persistent research/state machinery and validated evidence**, not inside any one model. Models should be replaceable components that query and contribute to that state.
+
+A future system should allow the persistent iDSS layer to determine what it knows, does not know, what changed, which hypotheses are active, what experiments have been run, what failed, and which reasoning model/agent should be asked next.
+
+## 5. Market Profile / Auction Reasoning direction
 
 Market Profile is treated as a structural lens into the developing auction, not a prediction machine.
 
@@ -65,7 +97,7 @@ Questions are first-class objects, e.g.:
 
 The engine must preserve earlier interpretations rather than overwrite them. Trade/strategy logic remains separate from MP reasoning.
 
-## 5. Live data lineage
+## 6. Live data lineage
 
 Canonical desired live source: **FYERS Versova L3 TBT**.
 
@@ -88,7 +120,7 @@ Known historical probe evidence:
 
 These are historical probe results, not current live facts.
 
-## 6. Agent-control / project-memory requirements
+## 7. Agent-control / project-memory requirements
 
 Existing control substrate:
 - AI_OPERATIONAL_LAWS 1–32
@@ -112,7 +144,7 @@ Every new session should establish:
 
 Negative knowledge is valuable and must be retained.
 
-## 7. Public ecosystem research already performed
+## 8. Public ecosystem research already performed
 
 Research is not limited to Prakash's own repositories. Public GitHub repositories are discovery sources for reusable mechanisms.
 
@@ -146,7 +178,7 @@ Repository topology/context mapping: index first, query topology, inspect sparse
 
 These are **research references, not adopted dependencies**.
 
-## 8. Mechanism decomposition
+## 9. Mechanism decomposition
 
 Do not collapse 'memory' into one product. iDSS needs to distinguish:
 
@@ -186,7 +218,7 @@ Do not collapse 'memory' into one product. iDSS needs to distinguish:
 
 Immediate research objective: determine which mechanisms can be reused or adapted, not install a framework merely because it exists.
 
-## 9. GitHub capability established
+## 10. GitHub capability established
 
 Repository: MPrakashDec/market-profile-sync
 
@@ -203,7 +235,7 @@ The MP branch contains an initial v0 skeleton:
 
 This v0 is intentionally incomplete and must not be mistaken for the finished MP reasoning engine.
 
-## 10. Current research frontier
+## 11. Current research frontier
 
 The next work should focus on the **control plane that lets different chats/agents recover the same project situation**, while continuing MP engine research in parallel.
 
@@ -217,8 +249,15 @@ Research questions:
 7. How do we prevent stale memory from becoming current truth?
 8. How do live iDSS state, replay state, project state, and agent-session state remain separate?
 9. Which external mechanisms are worth borrowing, and which conflict with iDSS's evidence/provenance model?
+10. How should multiple reasoning models communicate with the persistent iDSS state and with the coding agent without any one model becoming the authority?
 
-## 11. Session-start protocol
+The desired long-term loop is:
+
+**LIVE MARKET → deterministic observation/state engine → evidence ledger → event/change → hypothesis generation → historical case retrieval → replay/backtest → failure analysis → hypothesis revision → more replay/out-of-sample → validated mechanism → paper/live observation → only eventually execution layer**
+
+Execution remains a future gated layer, not the current objective.
+
+## 12. Session-start protocol
 
 A new ChatGPT or agent session should treat this file as the orientation anchor, then verify current facts against the repository and relevant evidence.
 
