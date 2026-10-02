@@ -89,3 +89,21 @@ For large chat exports:
 ## Continuation principle
 
 Continue from accumulated evidence and repo checkpoints. Do not clean-room redesign the historical work and do not discard the messy Des history merely because it is messy.
+
+## iDSS ecosystem reconnaissance and multi-chat repository continuity
+
+### Repository continuity rule
+
+This repository is the shared project-state surface across multiple ChatGPT interfaces and concurrent chats. The user may be working from a mobile ChatGPT app and two laptops with ChatGPT desktop, and more than one chat may update this repository. Therefore, before making repository changes or claiming current project state, inspect the live repository and reconcile the relevant existing documentation/checkpoints. Do not assume this chat is the latest state, and do not blindly append duplicate guidance.
+
+### Proactive ecosystem reconnaissance
+
+iDSS research must include proactive, mechanism-first ecosystem reconnaissance rather than relying on the user to discover relevant repositories. Continuously scan for existing mechanisms relevant to known Des/iDSS failure modes, including agent governance/enforcement, persistent memory, supervision/verification, orchestration, decision gates, context selection, provenance/audit, repository reconnaissance, research/document ingestion, tool authorization, and regression detection.
+
+The research loop is:
+
+**Discover → investigate → extract mechanism → test relevance → record evidence → consider implementation.**
+
+Repository/project discovery is not a mandate to install or adopt anything. Existing projects are research inputs; mechanisms must be evaluated against the current iDSS architecture, evidence, laws, negative knowledge, and failure modes before implementation. Avoid framework accumulation or clean-room redesign.
+
+ChatGPT remains a reasoning/research component, not the project authority or system of record; the live repository and accumulated project evidence must govern continuity claims.
