@@ -267,3 +267,18 @@ Before implementation:
 **Orient → verify → identify failure locus/frontier → research if needed → act → test → record result.**
 
 When the project materially changes, update this index so the next chat does not have to reconstruct the project from scratch.
+
+
+## 13. ChatGPT ↔ Antigravity Git bridge
+
+A repository-native asynchronous bridge is now installed at `docs/agent-bridge/`.
+
+- ChatGPT/reasoning sessions can write executable research or verification requests to `docs/agent-bridge/inbox/`.
+- Antigravity discovers the bridge through `.agents/rules/idss-chatgpt-bridge.md` and the execution procedure in `.agents/skills/idss-chatgpt-bridge/SKILL.md`.
+- Antigravity writes evidence-backed results to `docs/agent-bridge/outbox/` and commits/pushes them.
+- A later ChatGPT session can fetch the result from Git and continue from the returned evidence.
+- The protocol uses explicit request IDs and states (`PENDING`, `COMPLETED`, `BLOCKED`, `SUPERSEDED`) rather than treating chat history as the source of truth.
+
+This is an asynchronous message/state channel, not live RPC. Remote changes must be synchronized into the local Antigravity workspace; local results must be committed/pushed before ChatGPT can read them.
+
+The first live verification request is `docs/agent-bridge/inbox/2026-10-02-chatgpt-bridge-bootstrap-001.md`.
