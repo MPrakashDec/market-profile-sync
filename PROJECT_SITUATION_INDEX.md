@@ -282,3 +282,53 @@ A repository-native asynchronous bridge is now installed at `docs/agent-bridge/`
 This is an asynchronous message/state channel, not live RPC. Remote changes must be synchronized into the local Antigravity workspace; local results must be committed/pushed before ChatGPT can read them.
 
 The first live verification request is `docs/agent-bridge/inbox/2026-10-02-chatgpt-bridge-bootstrap-001.md`.
+
+
+## 14. Prospective-evaluation boundary research checkpoint — 2026-10-04
+
+### Verified repository evidence
+Inspection of mp-expert-v0 shows the current mp_expert/engine.py implementation is **pull / preloaded-history / caller-indexed replay**, not an enforced prospective event boundary.
+
+Key facts:
+- AuctionEngine.__init__ stores self.bars = sorted(list(bars), ...), so the engine object can retain the complete history.
+- snapshot_at(i) calculates from self.bars[:i+1]. This is a calculation convention, not an access-control boundary.
+- A caller holding the engine can directly access future bars through engine.bars; therefore future data is physically available to the caller/strategy.
+- AuctionSnapshot itself contains domain/scalar output and does not retain the full self.bars list; the primary demonstrated exposure is the engine object.
+- The docstring claim that replay and live use the same snapshot_at() path is not sufficient evidence of a live push/event consumer. Repository inspection did not find a demonstrated on_tick, process_event, update(bar), or equivalent prospective consumer in this branch.
+- No MP-specific tests were found in the inspected likely test paths.
+
+### Consequence
+Do **not** immediately rewrite/delete snapshot_at() or the existing v0. First prove the boundary failure and compare an event-consumer experiment against the existing calculations.
+
+Recommended experiment sequence:
+1. Add an explicit exploit proof showing future data is accessible through engine.bars.
+2. Build a thin experimental event stream/consumer alongside the existing engine; do not rewrite the v0 yet.
+3. Feed identical historical bars one event at a time and compare event-consumer output against snapshot_at(i) for every index.
+4. If outputs match, the calculation logic may already be event-local and the primary defect is the information boundary.
+5. If they diverge, locate the first divergence and identify the hidden pull dependency before refactoring.
+6. Only then consider making update(bar) -> snapshot the canonical prospective transition path.
+7. After that, test ambient external future access (global stores, caches, filesystem, network, module state). Removing self.bars alone is **not** a complete security boundary.
+
+### Security-model conclusions
+- A direct future-read test should initially be treated as an **exploit demonstration**, not a passing security test. The eventual boundary test should expect denial/provenance failure.
+- Python metadata/taint attached to arrays/DataFrames is not a security boundary because arbitrary code can strip metadata, copy raw values, serialize them, or obtain future data elsewhere.
+- For adversarial prospective evaluation, a push/event-stream contract is structurally safer than a caller-controlled as_of=t query, but process/address-space isolation may still be required.
+- A true prospective runner should ideally receive only the current event, use a runtime-owned clock, expose no arbitrary historical query API, and have no future target object resident in its process.
+- Physical process isolation does not automatically solve statistical governance or hidden search; execution integrity and research governance are separate concerns.
+
+### Research-governance conclusions
+- Virgin OOS is not virgin if an agent can generate/select many candidates against the same target data and submit only the winner. Emitted candidate count is not necessarily true search volume.
+- Multiple-testing/search accounting must be deterministic, precommitted or otherwise auditable, and immutable/versioned before prospective validation.
+- K_eff / spectral-decomposition correction is a possible methodology, not established universal truth. The correction method, estimator, dependence assumptions, and protocol version must be frozen before evaluation; the agent must not choose them after seeing results.
+- Discovery/reconstruction and prospective evaluation are different information regimes. Hindsight is allowed for reconstruction/descriptive state, but prospective claims require a separately enforced no-look-ahead regime.
+- A clean architecture likely uses a canonical event transition path for live and replay, with hindsight/reconstruction as a sidecar observer over replay output rather than a second competing state engine. This remains a design hypothesis until tested against the actual implementation.
+
+### Immediate frontier
+The next justified action is **runtime probing, not architecture debate**:
+- prove direct future accessibility;
+- build the minimal event-consumer comparison;
+- identify the first divergence or establish equivalence;
+- then probe ambient future-data channels;
+- only afterward decide the refactor/isolation boundary.
+
+This checkpoint is evidence from repository inspection as of 2026-10-04, not a claim that the wider Des workspace has no additional implementation.
